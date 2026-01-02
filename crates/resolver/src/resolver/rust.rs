@@ -56,7 +56,7 @@ impl Resolver for RustResolver {
             path: toml_path.clone(),
             reason: "Not found package in Cargo.toml".into(),
         })?;
-        let publish = !cargo_pkg_config.publish.unwrap_or(true);
+        let publish = cargo_pkg_config.publish.unwrap_or(true);
         let package = ResolvedPackage {
             name: cargo_pkg_config.name,
             version: semver::Version::parse(&cargo_pkg_config.version)?,
