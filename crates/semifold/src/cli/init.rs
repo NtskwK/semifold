@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, path::PathBuf};
 
-use clap::{Args, ValueEnum};
+use clap::{Parser, ValueEnum};
 use inquire::{Confirm, MultiSelect, Select, Text};
 use rust_i18n::t;
 use semifold_resolver::{
@@ -17,7 +17,7 @@ use semifold_resolver::{
 #[folder = "assets"]
 pub(crate) struct CIAsset;
 
-#[derive(Debug, Args)]
+#[derive(Debug, Parser)]
 pub(crate) struct Init {
     #[arg(short, long, default_value = ".changes", help = t!("cli.init.flags.target"))]
     pub target: Option<PathBuf>,
