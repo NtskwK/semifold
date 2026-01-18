@@ -154,8 +154,10 @@ impl Context {
                             name: asset_config.name.clone(),
                         });
                     }
-                    config::Asset::String(path) => {
-                        let asset_paths = glob::glob(path)?.flatten();
+                    config::Asset::String(rel_path) => {
+                        let full_path = repo_root.join(rel_path).to_string_lossy().to_string();
+                        log::debug!("Searching assets by glob: {:?}", full_path);
+                        let asset_paths = glob::glob(&full_path)?.flatten();
                         let asset_configs = asset_paths
                             .map(|path| config::AssetConfig {
                                 path: path.clone(),

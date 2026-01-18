@@ -16,7 +16,7 @@ resolver = "nodejs"
 [packages.semifold]
 path = "crates/semifold"
 resolver = "rust"
-assets = ["artifacts/**"]
+assets = ["artifacts/*"]
 
 [packages.semifold-changelog]
 path = "crates/changelog"
