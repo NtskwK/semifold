@@ -149,10 +149,15 @@ impl Context {
             for asset in &pkg_cfg.assets {
                 match asset {
                     config::Asset::Asset(asset_config) => {
-                        assets.push(config::AssetConfig {
+                        let asset = config::AssetConfig {
                             path: repo_root.join(&asset_config.path),
                             name: asset_config.name.clone(),
-                        });
+                        };
+                        if asset.path.is_file() {
+                            assets.push(asset);
+                        } else {
+                            log::warn!("Asset {:?} is not a file", asset.path);
+                        }
                     }
                     config::Asset::String(rel_path) => {
                         let full_path = repo_root.join(rel_path).to_string_lossy().to_string();
@@ -166,6 +171,7 @@ impl Context {
                                     .map(|n| n.to_string_lossy().to_string())
                                     .unwrap_or_else(|| path.to_string_lossy().to_string()),
                             })
+                            .filter(|asset| asset.path.is_file())
                             .collect::<Vec<_>>();
                         assets.extend(asset_configs);
                     }
