@@ -148,26 +148,32 @@ impl Context {
             .ok_or(error::ResolveError::GitError {
                 message: "Git repository is not initialized".to_string(),
             })?;
-        let assets = if let Some(pkg_cfg) = self.get_package_config(package_name) {
-            pkg_cfg
-                .assets
-                .iter()
-                .map(|p| match p {
-                    config::Asset::Asset(asset_config) => config::AssetConfig {
-                        path: repo_root.join(&asset_config.path),
-                        name: asset_config.name.clone(),
-                    },
-                    config::Asset::String(path) => config::AssetConfig {
-                        path: repo_root.join(path),
-                        name: Path::new(path)
-                            .file_name()
-                            .map(|n| n.to_string_lossy().to_string())
-                            .unwrap_or_else(|| path.clone()),
-                    },
-                })
-                .collect()
-        } else {
-            Vec::new()
+
+        let mut assets = Vec::new();
+        if let Some(pkg_cfg) = self.get_package_config(package_name) {
+            for asset in &pkg_cfg.assets {
+                match asset {
+                    config::Asset::Asset(asset_config) => {
+                        assets.push(config::AssetConfig {
+                            path: repo_root.join(&asset_config.path),
+                            name: asset_config.name.clone(),
+                        });
+                    }
+                    config::Asset::String(path) => {
+                        let asset_paths = glob::glob(path)?.flatten();
+                        let asset_configs = asset_paths
+                            .map(|path| config::AssetConfig {
+                                path: path.clone(),
+                                name: path
+                                    .file_name()
+                                    .map(|n| n.to_string_lossy().to_string())
+                                    .unwrap_or_else(|| path.to_string_lossy().to_string()),
+                            })
+                            .collect::<Vec<_>>();
+                        assets.extend(asset_configs);
+                    }
+                }
+            }
         };
         Ok(assets)
     }
