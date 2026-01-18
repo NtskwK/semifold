@@ -1,9 +1,4 @@
-use std::{
-    cell::RefCell,
-    collections::HashMap,
-    env,
-    path::{Path, PathBuf},
-};
+use std::{cell::RefCell, collections::HashMap, env, path::PathBuf};
 
 use crate::{config, error, resolver};
 

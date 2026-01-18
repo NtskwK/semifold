@@ -7,7 +7,7 @@ use semver::Version;
 
 use crate::{
     changeset::{BumpLevel, Changeset},
-    config::{Asset, CommandConfig, VersionMode},
+    config::{CommandConfig, VersionMode},
     error::ResolveError,
 };
 
