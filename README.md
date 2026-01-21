@@ -7,7 +7,7 @@
 
 # Semifold
 
-English | [Chinese](README.CN.md)
+English | [中文](README.CN.md)
 
 </div>
 
